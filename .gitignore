@@ -197,3 +197,6 @@ local_settings.py
 
 # Ignore all "trace"-specific output files.
 *.cover
+
+# Ignore all setuptools generated files
+*.egg-info
