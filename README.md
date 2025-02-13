@@ -10,7 +10,14 @@ pip install ipython_beartype
 
 ## Usage
 
-TODO
+Within an IPython / Jupyter notebook session, do the following:
+
+```console
+%load_ext ipython_beartype
+%beartype
+```
+
+All the type annotations in the following cells will be type checked.
 
 ## Local Development / Testing
 
@@ -38,3 +45,12 @@ Then upload it to PyPI using [twine](https://twine.readthedocs.io/en/latest/#ins
 ```bash
 twine upload dist/*
 ```
+
+## Credits
+
+Thanks to [knyazer](https://github.com/knyazer) and
+[patrick-kidger](https://github.com/patrick-kidger) for building the `jaxtyping`
+IPython extension, which was used as the base for this extension.
+
+Also special thanks to [leycec](https://github.com/leycec) for creating beartype
+and the IPython team.
