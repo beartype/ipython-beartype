@@ -2,10 +2,10 @@
 
 from beartype.claw._ast.clawastmain import BeartypeNodeTransformer
 from beartype._conf.confcls import BeartypeConf
-from IPython.terminal.interactiveshell import TerminalInteractiveShell
+from IPython.terminal.interactiveshell import InteractiveShell
 
 
-def load_ipython_extension(ipython: TerminalInteractiveShell) -> None:
+def load_ipython_extension(ipython: InteractiveShell) -> None:
     # The import is local to avoid degrading import times when the magic is
     # not needed.
     from IPython.core.magic import line_magic, Magics, magics_class
