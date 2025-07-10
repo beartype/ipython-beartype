@@ -6,15 +6,13 @@ build-backend = "hatchling.build"
 name = "ipython-beartype"
 dynamic = ["version"]
 description = "IPython extension type-checking IPython environments with beartype."
-#long_description = "file: README.md"
-#long_description_content_type = "text/markdown"
+readme = "README.md"
 requires-python = ">=3.9"
-#url = "https://github.com/beartype/ipython-beartype"
+urls = {homepage = "https://github.com/beartype/ipython-beartype"}
 authors = [
     {name="Tushar Sadhwani",email="tushar.sadhwani000@gmail.com"}
 ]
 license = {file="LICENSE"}
-#license_file = "LICENSE"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -35,9 +33,23 @@ dependencies = [
     "IPython>=8.0.0"
 ]
 
+[tool.hatch.build.targets.wheel]
+include = [
+    "/src/ipython_beartype/**",
+]
+
 [tool.hatch.build.targets.sdist]
-include = ["src/ipython_beartype/**"]
-exclude = ["tests/**"]
+include = [
+    ".gitignore",
+
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+    "/tox.ini",
+    
+    "/src/ipython_beartype/**",
+    "/tests/**"
+]
 
 
 [project.optional-dependencies]
