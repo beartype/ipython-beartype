@@ -1,7 +1,7 @@
 """IPython extension type-checking IPython environments with beartype."""
 
 from beartype.claw._ast.clawastmain import BeartypeNodeTransformer
-from beartype._conf.confcls import BeartypeConf
+from beartype import BeartypeConf
 from IPython.core.interactiveshell import InteractiveShell
 
 __version__ = "0.1.0"
