@@ -29,8 +29,9 @@ classifiers = [
     "Typing :: Typed"
 ]
 dependencies = [
-    # Pin for now since this is compatible
-    "beartype==0.20.0",
+    # Beartype 0.21.0 moves needed files
+    "beartype<0.21.0",
+    # 8 came out > 4 years ago so seems reasonable for backwards compatibility
     "IPython>=8.0.0"
 ]
 
