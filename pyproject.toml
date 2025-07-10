@@ -37,6 +37,9 @@ dependencies = [
 include = [
     "/src/ipython_beartype/**",
 ]
+packages = [
+    "src/ipython_beartype",
+]
 
 [tool.hatch.build.targets.sdist]
 include = [
