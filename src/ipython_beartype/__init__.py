@@ -2,8 +2,9 @@
 
 from beartype.claw._ast.clawastmain import BeartypeNodeTransformer
 from beartype._conf.confcls import BeartypeConf
-from IPython.terminal.interactiveshell import InteractiveShell
+from IPython.core.interactiveshell import InteractiveShell
 
+__version__ = "0.1.0"
 
 def load_ipython_extension(ipython: InteractiveShell) -> None:
     # The import is local to avoid degrading import times when the magic is
@@ -31,4 +32,4 @@ def load_ipython_extension(ipython: InteractiveShell) -> None:
                 )
             )
 
-    ipython.register_magics(IPythonBeartypeMagics)  # type: ignore[no-untyped-call]
+    ipython.register_magics(IPythonBeartypeMagics)
