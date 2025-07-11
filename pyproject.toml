@@ -1,0 +1,82 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ipython-beartype"
+dynamic = ["version"]
+description = "IPython extension type-checking IPython environments with beartype."
+readme = "README.md"
+requires-python = ">=3.9"
+urls = {homepage = "https://github.com/beartype/ipython-beartype"}
+authors = [
+    {name="Tushar Sadhwani",email="tushar.sadhwani000@gmail.com"}
+]
+license = {file="LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Typing :: Typed"
+]
+dependencies = [
+    "beartype",
+    # 8 came out > 4 years ago so seems reasonable for backwards compatibility
+    "IPython>=8.0.0"
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/src/ipython_beartype/**",
+]
+packages = [
+    "src/ipython_beartype",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    ".gitignore",
+
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+    "/tox.ini",
+    
+    "/src/ipython_beartype/**",
+    "/tests/**"
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "tox",
+]
+
+[tool.hatch.version]
+path = "src/ipython_beartype/__init__.py"
+variable = "__version__"
+
+[tool.pytest]
+addopts = [
+    "--cov",
+    "--cov-report=term-missing"
+]
+
+[tool.mypy]
+strict = "True"
+exclude = [
+    "setup.py",
+    "venv",
+    "build"
+]
