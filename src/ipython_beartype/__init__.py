@@ -1,12 +1,40 @@
-"""IPython extension type-checking IPython environments with beartype."""
+#!/usr/bin/env python3
+# --------------------( LICENSE                            )--------------------
+# Copyright (c) 2014-2025 Beartype authors.
+# See "LICENSE" for further details.
 
+'''
+**ipython-beartype,** an IPython extension type-checking IPython environments
+with :mod:`beartype`.
+'''
+
+# ....................{ IMPORTS                            }....................
 from beartype.claw._ast.clawastmain import BeartypeNodeTransformer
 from beartype import BeartypeConf
 from IPython.core.interactiveshell import InteractiveShell
 
-__version__ = "0.1.0"
+# ....................{ GLOBALS                            }....................
+__version__ = "0.2.0"
+'''
+Human-readable package version as a ``.``-delimited string.
 
+For :pep:`8` compliance, this specifier has the canonical name ``__version__``
+rather than that of a typical global (e.g., ``VERSION_STR``).
+
+Note that this is the canonical version specifier for this package. Indeed, the
+top-level ``pyproject.toml`` file dynamically derives its own ``version`` string
+from this string global.
+
+See Also
+--------
+pyproject.toml
+   The Hatch-specific ``[tool.hatch.version]`` subsection of the top-level
+   ``pyproject.toml`` file, which parses its version from this string global.
+'''
+
+# ....................{ PLUGINS                            }....................
 def load_ipython_extension(ipython: InteractiveShell) -> None:
+
     # The import is local to avoid degrading import times when the magic is
     # not needed.
     from IPython.core.magic import line_magic, Magics, magics_class

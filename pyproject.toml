@@ -1,18 +1,45 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# --------------------( LICENSE                            )--------------------
+# Copyright (c) 2014-2025 Beartype authors.
+# See "LICENSE" for further details.
+#
+# --------------------( SYNOPSIS                           )--------------------
+# Project-wide packager-agnostic configuration. Unlike all other top-level
+# configuration files (e.g., "setup.py", "MANIFEST.in") specific to some
+# utility in Python's package management ecosystem (e.g., "pip", "setuptools"),
+# this file strictly conforms to a standards-compliant PEP and hence
+# generically applies to *ALL* such utilities.
+#
+# Welcome to project distribution hell, where only twenty distinct files in
+# twenty distinct formats suffice to distribute a single project.
+#
+# --------------------( USAGE                              )--------------------
+# Common Hatch commands include:
+#
+#     # Validate this file. *ALWAYS* run this command after modifying this file.
+#     $ hatch project metadata | less
+#
+#     # Build both a source (tarball) *AND* binary distribution (wheel).
+#     $ hatch build -t sdist -t wheel
+#
+# --------------------( SEE ALSO                           )--------------------
+# * https://snarky.ca/clarifying-pep-518
+#   "Clarifying PEP 518 (a.k.a. pyproject.toml)", a human-readable article from
+#   one of the principal authors of the "pyproject.toml" standard.
 
+# ....................{ PEP 621                            }....................
+# PEP 621-compliant section generically defining project metadata in a build
+# tool-agnostic manner.
 [project]
 name = "ipython-beartype"
-dynamic = ["version"]
 description = "IPython extension type-checking IPython environments with beartype."
 readme = "README.md"
-requires-python = ">=3.9"
-urls = {homepage = "https://github.com/beartype/ipython-beartype"}
+
 authors = [
-    {name="Tushar Sadhwani",email="tushar.sadhwani000@gmail.com"}
+    { name="Tushar Sadhwani", email="tushar.sadhwani000@gmail.com" },
+    { name="Cecil Curry", email="leycec@gmail.com" }
 ]
-license = {file="LICENSE"}
+
+license = { file="LICENSE" }
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
@@ -26,13 +53,120 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed"
 ]
-dependencies = [
-    "beartype",
-    # 8 came out > 4 years ago so seems reasonable for backwards compatibility
-    "IPython>=8.0.0"
+
+# List of the names of all "[project]" fields to be resolved dynamically through
+# build toolchain-specific plugins (rather than defined statically above).
+dynamic = [
+    # Dynamically resolve the "[project]" "version" field via the Hatch-specific
+    # "[tool.hatch.version]" subsection, subsequently defined below.
+    "version",
 ]
 
+# ....................{ PEP 621 ~ dependencies : mandatory }....................
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# WARNING: Changes to this Python interpreter version specifier *MUST* be
+# synchronized with:
+# * Continuous integration (CI) test matrices, including:
+#   * The top-level "tox.ini" file.
+#   * The "jobs/tests/strategy/matrix/{tox-env,include/python-version}"
+#     settings of the GitHub Actions-specific
+#     ".github/workflows/python_test.yml" file.
+# * Front-facing documentation (e.g., "doc/src/pep.rst").
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Minimum Python interpreter version required by this package.
+#
+# As a tradeoff between backward compatibility, security, and maintainability,
+# this package strongly attempts to preserve compatibility with the first stable
+# release of the oldest version of CPython still under active development.
+# Obsolete and insecure versions of CPython that have reached their official End
+# of Life (EoL) (e.g., Python 3.7) are explicitly unsupported.
+requires-python = ">=3.9"
+
+# Mandatory runtime dependencies.
+dependencies = [
+    "beartype",
+
+    # 8 came out > 4 years ago, so seems reasonable for backwards compatibility.
+    "IPython >=8.0.0"
+]
+
+# ....................{ PEP 621 ~ dependencies : optional  }....................
+# Optional dependencies specified as a set of zero or more assignments of the
+# form "{extra_name} = [{extra_dependency_1}, ...]", where:
+# * "{extra_name}" is the arbitrary name of a project-specific "extra" (i.e.,
+#   category of optional dependencies).
+# * "{{extra_dependency_1}, ..." is a comma-delimited list of optional
+#   dependencies installed under this "extra".
+#
+# When installing this project with "pip", users may additionally install these
+# optional dependencies by subscripting the name of this project by these
+# extras in comma-delimited fashion: e.g.,
+#     $ pip install beartype[doc-rtd,test-tox]
+#
+# Note that PEP 621 explicitly supports dependency composition through
+# self-referential "extras". See also this awesome StackOverflow answer:
+#     https://stackoverflow.com/a/72524073/2809027
+
+[project.optional-dependencies]
+
+# Developer-specific test-time dependencies required to test this package via
+# the third-party "pytest" and "tox" commands at the command line.
+dev = [
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "tox",
+]
+
+# ....................{ PEP 621 ~ urls                     }....................
+# Table (i.e., dictionary) mapping from the PyPI-recognized name of each
+# relevant project URL to that URL.
+[project.urls]
+GitHub =   "https://github.com/beartype/ipython-beartype"
+# Forums =   "https://github.com/beartype/ipython-beartype/discussions"
+Issues =   "https://github.com/beartype/ipython-beartype/issues"
+Releases = "https://github.com/beartype/ipython-beartype/releases"
+
+# ....................{ PEP 517                            }....................
+# PEP 517-compliant section declaring the third-party build tools required to
+# install this "pyproject.toml"-based project.
+[build-system]
+
+# List of all third-party Python packages required to build (i.e., install) this
+# project from both codebase tarballs and binary wheels.
+requires = ["hatchling >=1.14.0"]
+
+# Fully-qualified name of the Python submodule of a third-party Python package
+# listed above to be imported at runtime by third-party Python package managers
+# (e.g., "pip") to build this project.
+build-backend = "hatchling.build"
+
+# ....................{ NON-PEP ~ hatch                    }....................
+# PEP-noncompliant section declaring Hatch-specific version settings. See also:
+# * Official documentation for this section.
+#   https://hatch.pypa.io/latest/version
+[tool.hatch.version]
+
+# Relative filename of the Python submodule defining either a PEP 8-compliant
+# "__version__" dunder global *OR* a PEP-noncompliant "VERSION" global, which
+# Hatch then statically parses to obtain the current version of this project.
+path = "src/ipython_beartype/__init__.py"
+
+variable = "__version__"
+
+# ....................{ NON-PEP ~ hatch : path             }....................
+# PEP-noncompliant section declaring Hatch-specific build settings. Note that:
+# * Hatch silently ignores *ALL* pathnames matched by ".gitignore" files
+#   distributed throughout this codebase.
+[tool.hatch.build]
+
+# PEP-noncompliant section declaring Hatch-specific build settings when
+# building binary distributions (e.g., wheels).
 [tool.hatch.build.targets.wheel]
+
+# Whitelist of one or more Bash-style glob expressions matching the relative
+# pathnames of all paths to be included in binary distributions (e.g., wheels)
+# but *NOT* source distributions (e.g., tarballs) created by Hatch.
 include = [
     "/src/ipython_beartype/**",
 ]
@@ -40,7 +174,29 @@ packages = [
     "src/ipython_beartype",
 ]
 
+# PEP-noncompliant section declaring Hatch-specific build settings when
+# building source distributions (e.g., tarballs).
 [tool.hatch.build.targets.sdist]
+
+# Whitelist of one or more Bash-style glob expressions matching the relative
+# pathnames of all paths to be included in source distributions (e.g., tarballs)
+# but *NOT* binary distributions (e.g., wheels) created by Hatch.
+#
+# Note that:
+# * This setting is the Hatch-specific equivalent of the setuptools-specific
+#   "MANIFEST.in" file, which serves a similar (albeit non-standard, poorly
+#   documented, and obfuscatory) purpose in the setuptools community.
+# * Hatch *ALWAYS* implicitly includes at least these files in source
+#   distributions:
+#   * ".gitignore".
+#   * "AUTHORS".
+#   * "LICENSE".
+#   * "README*".
+#   * "pyproject.toml".
+#
+# Nonetheless, explicit is better than implicit. Trusting all future versions of
+# Hatch to preserve this contract is a bridge too far for us. Ergo, we
+# explicitly match *ALL* paths to be included in source distributions here.
 include = [
     ".gitignore",
 
@@ -48,32 +204,37 @@ include = [
     "/LICENSE",
     "/pyproject.toml",
     "/tox.ini",
-    
+
     "/src/ipython_beartype/**",
     "/tests/**"
 ]
 
-
-[project.optional-dependencies]
-dev = [
-    "ruff",
-    "mypy",
-    "pytest",
-    "pytest-cov",
-    "tox",
-]
-
-[tool.hatch.version]
-path = "src/ipython_beartype/__init__.py"
-variable = "__version__"
-
+# ....................{ NON-PEP ~ pytest                   }....................
+# PEP-noncompliant section declaring pytest-specific settings.
 [tool.pytest]
 addopts = [
     "--cov",
     "--cov-report=term-missing"
 ]
 
+[tool.pytest.ini_options]
+
+# Relative dirname of the top-level subdirectory containing the
+# "ipython_beartype/" subdirectory to be tested by pytest.
+pythonpath = "src/"
+
+# Whitespace-delimited list of the relative paths of all top-level directories
+# containing tests. All Python scripts with basenames prefixed by "test_" in
+# all subdirectories of these directories including these directories
+# themselves will be parsed for:
+# * Functions whose names are prefixed by "test_".
+# * Classes whose names are prefixed by "Test".
+testpaths = "tests/"
+
+# ....................{ NON-PEP ~ mypy                     }....................
+# PEP-noncompliant section declaring mypy-specific settings.
 [tool.mypy]
+
 strict = "True"
 exclude = [
     "setup.py",

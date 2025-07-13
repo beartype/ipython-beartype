@@ -1,0 +1,64 @@
+---
+# --------------------( LICENSE                            )--------------------
+# Copyright (c) 2014-2025 Beartype authors.
+# See "LICENSE" for further details.
+#
+# --------------------( SYNOPSIS                           )--------------------
+# GitHub-specific continuous integration (CI) configuration, enabling the usual
+# GitHub Actions workflow for pure-Python packages exercised by "tox".
+#
+# --------------------( SEE ALSO                           )--------------------
+# * https://hynek.me/articles/python-github-actions
+#   Well-authored blog post strongly inspiring this configuration.
+
+# ....................{ METADATA                           }....................
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# WARNING: Changes to this name *MUST* be manually synchronized with:
+# * The "|GitHub Actions badge|" image URL in our top-level "README.rst".
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Non-human-readable (i.e., machine-readable) label associated with this
+# GitHub Actions workflow.
+name: test
+
+# ....................{ TRIGGER                            }....................
+# Confine testing to only...
+#
+# Note that "**" matches all (possibly deeply "/"-nested) branches. See also:
+# * https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+#   GitHub-specific glob syntax for matching branches and tags below.
+on:
+  # Pushes to the main branch. Pushes to other branches are assumed to be
+  # developer-specific and thus already tested locally by that developer.
+  push:
+    branches:
+      - main
+  # Pull requests against the main branch. Pull requests against other branches
+  # should, ideally, *NEVER* occur; if and when they do, we ignore them.
+  pull_request:
+    branches:
+      - main  # '**'
+
+# ....................{ MAIN                               }....................
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - { python-version: "3.9", tox-env: "py39" }
+          - { python-version: "3.10", tox-env: "py310" }
+          - { python-version: "3.11", tox-env: "py311" }
+          - { python-version: "3.12", tox-env: "py312,py312-type" }
+          - { python-version: "3.13", tox-env: "py313" }
+    name: "Python ${{ matrix.python-version }} tests"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python-version }}"
+          architecture: x64
+      - name: Install dependencies
+        run: pip install .[dev]
+      - name: Run tests and type checking
+        run: tox -e ${{matrix.tox-env }}
