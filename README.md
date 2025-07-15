@@ -1,10 +1,12 @@
+![https://beartype.readthedocs.io](https://raw.githubusercontent.com/beartype/beartype-assets/main/banner/logo.png)
+
 # ipython-beartype
 
 IPython extension type-checking IPython environments with beartype.
 
 ## Installation
 
-```bash
+```console
 pip install ipython_beartype
 ```
 
@@ -12,7 +14,7 @@ pip install ipython_beartype
 
 Within an IPython / Jupyter notebook session, do the following:
 
-```console
+```python
 %load_ext ipython_beartype
 %beartype
 ```
@@ -28,17 +30,6 @@ All the type annotations in the following cells will be type checked.
 ## Type Checking
 
 Run `mypy .`
-
-## Create and upload a package to PyPI
-
-Make sure to bump the version in `__init__.py`.
-
-Then run the following commands:
-
-```bash
-hatch build -t wheel
-hatch publish
-```
 
 ## Credits
 

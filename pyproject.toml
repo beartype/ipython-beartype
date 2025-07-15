@@ -164,14 +164,24 @@ variable = "__version__"
 # building binary distributions (e.g., wheels).
 [tool.hatch.build.targets.wheel]
 
+packages = [
+    "src/ipython_beartype",
+]
+
 # Whitelist of one or more Bash-style glob expressions matching the relative
 # pathnames of all paths to be included in binary distributions (e.g., wheels)
 # but *NOT* source distributions (e.g., tarballs) created by Hatch.
 include = [
-    "/src/ipython_beartype/**",
-]
-packages = [
-    "src/ipython_beartype",
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # CAUTION: Synchronize with glob expressions for source distributions below.
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    # Glob expression recursively matching *ALL* Python submodules in this
+    # project's package directory.
+    "/src/ipython_beartype/**/*.py",
+
+    # Relative filenames of all requisite package-level installation-time files.
+    "/src/ipython_beartype/py.typed",
 ]
 
 # PEP-noncompliant section declaring Hatch-specific build settings when
@@ -198,15 +208,39 @@ packages = [
 # Hatch to preserve this contract is a bridge too far for us. Ergo, we
 # explicitly match *ALL* paths to be included in source distributions here.
 include = [
+    # Relative basenames of all requisite files residing in *ANY* directory.
     ".gitignore",
 
-    "/README.md",
+    # Relative basenames of all requisite top-level installation-time files.
     "/LICENSE",
+    "/*.md",
+    "/*.rst",
     "/pyproject.toml",
+    "/pytest",
+    "/tox",
     "/tox.ini",
+    "/.coveragerc",
 
-    "/src/ipython_beartype/**",
-    "/tests/**"
+    # Relative dirnames of all requisite top-level installation-time
+    # directories, including:
+    # * All files documenting this project.
+    "/doc/*.md",
+    "/doc/*.rst",
+
+    # Glob expression recursively matching *ALL* Python submodules in this
+    # project's test suite.
+    "/tests/**/*.py",
+
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # CAUTION: Synchronize with glob expressions for binary distributions above.
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    # Glob expression recursively matching *ALL* Python submodules in this
+    # project's test suite.
+    "/src/ipython_beartype/**/*.py",
+
+    # Relative filenames of all requisite package-level installation-time files.
+    "/src/ipython_beartype/py.typed",
 ]
 
 # ....................{ NON-PEP ~ pytest                   }....................
@@ -234,10 +268,8 @@ testpaths = "tests/"
 # ....................{ NON-PEP ~ mypy                     }....................
 # PEP-noncompliant section declaring mypy-specific settings.
 [tool.mypy]
-
 strict = "True"
 exclude = [
-    "setup.py",
     "venv",
     "build"
 ]
